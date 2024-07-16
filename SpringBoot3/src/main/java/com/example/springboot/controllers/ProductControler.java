@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 // Nível de Maturidade de uma API segundo Leonard Richi..
 // 0° - A api deve utilizar o protocolo HTTP
@@ -39,7 +41,15 @@ public class ProductControler {
 
   @GetMapping("/products")
   public ResponseEntity<List<ProductModel>> getAllProduct() {
-    return ResponseEntity.status(HttpStatus.OK).body(productRepositoy.findAll());
+    List<ProductModel> productList = productRepositoy.findAll();
+
+    if (!productList.isEmpty()) {
+      for (ProductModel product : productList) {
+        UUID id = product.getIdProduct();
+        product.add(linkTo(methodOn(ProductControler.class).getOneProduct(id)).withSelfRel());
+      }
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(productList);
   }
 
   @GetMapping("/products/{id}")
@@ -48,6 +58,7 @@ public class ProductControler {
     if (product0.isEmpty()) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
     }
+    product0.get().add(linkTo(methodOn(ProductControler.class).getAllProduct()).withSelfRel());
     return ResponseEntity.status(HttpStatus.OK).body(product0.get());
   }
 
