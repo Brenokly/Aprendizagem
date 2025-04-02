@@ -1,15 +1,22 @@
-import { useCarrinho } from "../components/CarrinhoContext";
+import { useCarrinho } from "../../components/CarrinhoContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function Home() {
-  const { carrinho, adicionarAoCarrinho } = useCarrinho();
+  const carrinhoContext = useCarrinho();
   const [id, setId] = useState(1);
   const navigate = useNavigate();
 
-  function adicionar(){
-    adicionarAoCarrinho({ id: id, nome: "Produto " + id });
-    setId(id+1);
+  function adicionar() {
+    // Pegar o último ID do carrinho
+    const ultimoId = carrinhoContext.carrinho.length > 0 ? carrinhoContext.carrinho.length : 0;
+    const novoId = ultimoId + 1;
+  
+    // Criar novo produto
+    const novoProduto = { id: novoId, nome: "Produto " + novoId };
+  
+    // Adicionar ao carrinho corretamente
+    carrinhoContext.adicionarAoCarrinho(novoProduto);
   }
 
   function irParaCheckout(){
@@ -21,11 +28,11 @@ export default function Home() {
       <h1>Bem-Vindo a Nossa Loja</h1>
       <h2>Adicione Itens ao seu Carrinho</h2>
       <h2>Itens:</h2>
-      {carrinho.length === 0 ? (
+      {carrinhoContext.carrinho.length === 0 ? (
         <p>Seu carrinho está vazio.</p>
       ) : (
         <ul>
-          {carrinho.map((item) => (
+          {carrinhoContext.carrinho.map((item) => (
             <li key={item.id}>{item.nome}</li>
           ))}
         </ul>

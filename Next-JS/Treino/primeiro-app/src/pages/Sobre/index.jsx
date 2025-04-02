@@ -1,16 +1,16 @@
-import { useCarrinho } from "../components/CarrinhoContext";
+import { useCarrinho } from "../../components/CarrinhoContext";
 
 export default function Sobre() {
-  const { carrinho } = useCarrinho(); // Pegando os itens do carrinho global
+  const carrinhoContext = useCarrinho();
 
   return (
     <div>
       <h1>Checkout</h1>
-      {carrinho.length === 0 ? (
+      {carrinhoContext.carrinho.length === 0 ? (
         <p>Seu carrinho está vazio.</p>
       ) : (
         <ul>
-          {carrinho.map((item) => (
+          {carrinhoContext.carrinho.map((item) => (
             <li key={item.id}>{item.nome}</li>
           ))}
         </ul>
