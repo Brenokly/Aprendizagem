@@ -8,7 +8,7 @@ export const metadata = {
   title: "Tarefas+ | Organize suas tarefas de forma fácil",
 };
 
-export const revalidate = 120;
+export const revalidate = 60;
 
 async function getDashboardData() {
   const [postsSnap, comentariosSnap] = await Promise.all([
