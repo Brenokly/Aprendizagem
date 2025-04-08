@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Meu Painel de tarefas",
-};
+};  
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
